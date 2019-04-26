@@ -1,6 +1,6 @@
 import os
 import argparse
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import pandas
 import tempfile
 from progressbar import ProgressBar, Percentage, Bar, ETA, FileTransferSpeed
@@ -18,16 +18,16 @@ DEFAULTS = {
 
 def get_arguments():
     parser = argparse.ArgumentParser(description = 'Download ChEMBL entries and convert them to input for preprocessing')
-    parser.add_argument('--dataset', type = str, help = "%s  ...or specify your own --uri" % ", ".join(DEFAULTS.keys()))
+    parser.add_argument('--dataset', type = str, help = "%s  ...or specify your own --uri" % ", ".join(list(DEFAULTS.keys())))
     parser.add_argument('--uri', type = str, help = 'URI to download ChEMBL entries from')
     parser.add_argument('--outfile', type = str, help = 'Output file name')
     args = parser.parse_args()
 
-    if args.dataset and args.dataset in DEFAULTS.keys():
+    if args.dataset and args.dataset in list(DEFAULTS.keys()):
         uri = DEFAULTS[args.dataset]['uri']
         outfile = args.outfile or DEFAULTS[args.dataset]['outfile']
-    elif args.dataset not in DEFAULTS.keys():
-        parser.error("Dataset %s unknown. Valid choices are: %s" % (args.dataset, ", ".join(DEFAULTS.keys())))
+    elif args.dataset not in list(DEFAULTS.keys()):
+        parser.error("Dataset %s unknown. Valid choices are: %s" % (args.dataset, ", ".join(list(DEFAULTS.keys()))))
     else:
         uri = args.uri
         outfile = args.outfile
@@ -51,7 +51,7 @@ def main():
             progress.start()
         progress.update(min(count * blockSize, totalSize))
 
-    urllib.urlretrieve(uri, fd.name, reporthook = update)
+    urllib.request.urlretrieve(uri, fd.name, reporthook = update)
     if dataset == 'zinc12':
         df = pandas.read_csv(fd.name, delimiter = '\t')
         df = df.rename(columns={'SMILES':'structure'})

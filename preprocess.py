@@ -54,8 +54,7 @@ def main():
     charset = [ np.string_(x) for x in charset ]
     #
  
-    one_hot_encoded_fn = lambda row: list( map(lambda x: one_hot_array(x, len(charset)),
-                                                one_hot_index(row, charset)))
+    one_hot_encoded_fn = lambda row: list( [one_hot_array(x, len(charset)) for x in one_hot_index(row, charset)])
     h5f = h5py.File(args.outfile, 'w')
     h5f.create_dataset('charset', data = charset)
     def create_chunk_dataset(h5file, dataset_name, dataset, dataset_shape,
