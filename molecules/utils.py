@@ -16,6 +16,7 @@ def from_one_hot_array(vec):
     return int(oh[0][0])
 
 def decode_smiles_from_indexes(vec, charset):
+    charset = [str(c) for c in charset]
     return "".join(map(lambda x: charset[x], vec)).strip()
 
 def load_dataset(filename, split = True):
