@@ -7,6 +7,7 @@ def one_hot_array(i, n):
     return list( map(int, [ix == i for ix in range(n)]))
 
 def one_hot_index(vec, charset):
+    charset = [str(c) for c in charset]
     return list( map(charset.index, vec))
 
 def from_one_hot_array(vec):
@@ -27,6 +28,7 @@ def load_dataset(filename, split = True):
         data_train = None
     data_test = h5f['data_test'][:]
     charset =  h5f['charset'][:]
+    charset = [str(c) for c in charset]
     h5f.close()
     if split:
         return (data_train, data_test, charset)
